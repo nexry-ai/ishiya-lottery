@@ -253,7 +253,9 @@ function updateCount(){const n=new Date,s=new Date('2026-03-31T12:00:00+09:00'),
 updateCount();setInterval(updateCount,3e4);
 function updateCD(){const n=new Date,d=Math.max(0,DEADLINE-n),D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);document.getElementById('cd-days').textContent=String(D).padStart(2,'0');document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');document.getElementById('cd-secs').textContent=String(S).padStart(2,'0')}
 updateCD();setInterval(updateCD,1e3);
-const FORM_API='https://line-crm-worker.nexry-inc-ai.workers.dev/api/forms/2340dc62-e4bb-47f5-b951-34ce88d3ba6c/submit';
+const params=new URLSearchParams(location.search);
+const FORM_ID=params.get('form')||'2340dc62-e4bb-47f5-b951-34ce88d3ba6c';
+const FORM_API='https://line-crm-worker.nexry-inc-ai.workers.dev/api/forms/'+FORM_ID+'/submit';
 document.getElementById('lotteryForm').addEventListener('submit',async function(e){e.preventDefault();const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';
 const data={name:document.getElementById('name').value,line_name:document.getElementById('lineName').value,email:document.getElementById('email').value,birthday:document.getElementById('birthday').value,reason:document.getElementById('reason').value};
 const num=String(Math.floor(1e5+Math.random()*9e5));
