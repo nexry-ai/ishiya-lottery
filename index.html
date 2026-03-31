@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISHIYA | Exclusive Lottery</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ivory:#FAF8F5;--charcoal:#2C2C2C;--warm-gray:#9B9590;--light-gray:#E8E4E0;--gold:#B8976A;--gold-light:#D4C4A8;--deep:#1A1A1A;--cream:#F5F1EC}
+
+body{font-family:'Noto Serif JP',serif;background:var(--ivory);color:var(--charcoal);min-height:100vh;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:
+  radial-gradient(ellipse 600px 400px at 15% 10%, rgba(184,151,106,0.06) 0%, transparent 70%),
+  radial-gradient(ellipse 500px 500px at 85% 30%, rgba(160,190,210,0.07) 0%, transparent 70%),
+  radial-gradient(ellipse 400px 300px at 50% 70%, rgba(200,180,160,0.05) 0%, transparent 70%),
+  radial-gradient(ellipse 300px 400px at 20% 90%, rgba(180,200,190,0.04) 0%, transparent 70%);
+pointer-events:none;z-index:0}
+body>*{position:relative;z-index:1}
+
+/* Header */
+.header{text-align:center;padding:80px 24px 60px;border-bottom:1px solid var(--light-gray);background:
+  radial-gradient(ellipse 800px 300px at 30% 50%, rgba(160,190,210,0.08) 0%, transparent 70%),
+  radial-gradient(ellipse 600px 400px at 70% 30%, rgba(184,151,106,0.06) 0%, transparent 70%)}
+.brand{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:8px;color:var(--gold);font-weight:400;text-transform:uppercase;margin-bottom:40px}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:400;letter-spacing:2px;color:var(--charcoal);margin-bottom:16px}
+.header .subtitle{font-size:13px;font-weight:400;color:#7a756f;line-height:2.2;letter-spacing:1px}
+.divider{width:40px;height:1px;background:var(--gold);margin:24px auto}
+
+/* Section */
+.section{padding:60px 24px;max-width:520px;margin:0 auto}
+.section-label{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;text-align:center;margin-bottom:32px}
+
+/* Counter */
+.counter-wrap{text-align:center;padding:48px 24px;background:var(--cream);border-top:1px solid var(--light-gray);border-bottom:1px solid var(--light-gray)}
+.counter-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:400;color:var(--charcoal);letter-spacing:4px;line-height:1}
+.counter-unit{font-size:14px;color:#7a756f;margin-top:8px;letter-spacing:2px}
+.counter-live{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;font-size:11px;color:var(--gold);letter-spacing:2px}
+.counter-live .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:fade 2s ease-in-out infinite}
+@keyframes fade{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Countdown */
+.countdown-wrap{text-align:center;padding:40px 24px}
+.countdown{display:flex;justify-content:center;gap:24px;margin-top:16px}
+.cd-item{text-align:center}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--charcoal)}
+.cd-label{font-size:10px;color:#7a756f;letter-spacing:2px;margin-top:4px}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--light-gray);line-height:1;padding-top:2px}
+
+/* Past */
+.past{border-top:1px solid var(--light-gray)}
+.past-item{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--light-gray);max-width:520px;margin:0 auto}
+.past-name{font-size:13px;font-weight:400;color:var(--charcoal);letter-spacing:1px}
+.past-detail{font-size:12px;color:#7a756f;margin-top:4px}
+.past-ratio{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--gold)}
+.past-ratio-label{font-size:10px;color:#7a756f;letter-spacing:1px}
+
+/* Stone */
+.stone-section{background:linear-gradient(170deg,#1A1A1A 0%,#1E2028 40%,#1A1D22 70%,#1A1A1A 100%);color:#fff;padding:80px 24px;text-align:center;position:relative;overflow:hidden}
+.stone-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:
+  radial-gradient(ellipse 500px 300px at 20% 30%, rgba(184,151,106,0.06) 0%, transparent 70%),
+  radial-gradient(ellipse 400px 400px at 80% 70%, rgba(120,150,180,0.04) 0%, transparent 70%);
+pointer-events:none}
+.stone-section>*{position:relative;z-index:1}
+.stone-section .section-label{color:var(--gold-light)}
+.stone-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;letter-spacing:4px;margin-bottom:8px}
+.stone-en{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:400;color:var(--gold-light);letter-spacing:4px;margin-bottom:32px}
+.stone-price{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:400;color:#fff;letter-spacing:2px}
+.stone-price-tax{font-size:12px;color:rgba(255,255,255,.55);margin-top:4px;letter-spacing:1px}
+.stone-tags{display:flex;justify-content:center;gap:12px;margin-top:32px;flex-wrap:wrap}
+.stone-tag{padding:6px 16px;border:1px solid rgba(184,151,106,.4);border-radius:2px;font-size:11px;color:var(--gold-light);letter-spacing:2px}
+.stone-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:2.2;margin-top:32px;max-width:400px;margin-left:auto;margin-right:auto;text-align:left;font-weight:400}
+.stone-limit{margin-top:40px;font-size:13px;color:var(--gold-light);letter-spacing:2px;padding:16px;border:1px solid rgba(184,151,106,.3)}
+
+/* Form */
+.form-section{padding:80px 24px;max-width:520px;margin:0 auto}
+.form-section h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;text-align:center;letter-spacing:2px;margin-bottom:40px}
+.form-group{margin-bottom:24px}
+.form-group label{display:block;font-size:11px;color:#7a756f;letter-spacing:2px;margin-bottom:8px}
+.form-group input,.form-group select{width:100%;padding:16px 0;background:transparent;border:none;border-bottom:1px solid var(--light-gray);color:var(--charcoal);font-family:'Noto Serif JP',serif;font-size:15px;font-weight:400;outline:none;transition:border-color .3s;border-radius:0;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus{border-bottom-color:var(--gold)}
+.form-group input::placeholder{color:#c0bab4;font-weight:400}
+.form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M5 6L0 0h10z' fill='%239B9590'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center}
+.form-group select option{font-family:sans-serif}
+
+.submit-btn{width:100%;padding:20px;background:var(--charcoal);color:#fff;font-family:'Noto Serif JP',serif;font-size:14px;font-weight:400;letter-spacing:3px;border:none;cursor:pointer;transition:background .3s;margin-top:16px}
+.submit-btn:hover{background:var(--deep)}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.note{font-size:11px;color:#7a756f;text-align:center;margin-top:20px;line-height:2;font-weight:400}
+
+/* Completion */
+.completion{display:none;text-align:center;padding:100px 24px;max-width:520px;margin:0 auto}
+.completion .check-circle{width:64px;height:64px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;font-size:24px;color:var(--gold)}
+.completion h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;letter-spacing:2px;margin-bottom:32px}
+.completion .entry-label{font-size:11px;color:#7a756f;letter-spacing:2px}
+.completion .entry-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:400;color:var(--charcoal);letter-spacing:6px;margin:8px 0 32px}
+.completion .message{font-size:13px;color:#7a756f;line-height:2.2;font-weight:400}
+.completion .result-date{margin-top:32px;padding:20px;border:1px solid var(--light-gray);font-size:13px;color:var(--charcoal);letter-spacing:1px;font-weight:400}
+
+/* Footer */
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--light-gray);font-size:10px;color:#7a756f;letter-spacing:1px;line-height:2}
+.footer a{color:#7a756f;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">I S H I Y A</div>
+  <h1>Exclusive Lottery</h1>
+  <div class="divider"></div>
+  <p class="subtitle">鑑定士が厳選した石を、抽選でお届けいたします。<br>ご当選された方のみ、ご購入いただけます。</p>
+</div>
+
+<!-- Counter -->
+<div class="counter-wrap">
+  <div class="counter-num" id="entryCount">---</div>
+  <div class="counter-unit">applicants</div>
+  <div class="counter-live"><span class="dot"></span>LIVE</div>
+</div>
+
+<!-- Countdown -->
+<div class="countdown-wrap">
+  <div class="section-label">Application Deadline</div>
+  <div class="countdown">
+    <div class="cd-item"><div class="cd-num" id="cd-days">07</div><div class="cd-label">DAYS</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">HOURS</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">MIN</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">SEC</div></div>
+  </div>
+</div>
+
+<!-- Past Results -->
+<div class="past">
+  <div class="past-item">
+    <div>
+      <div class="past-name">第3回 — ストロベリークォーツ</div>
+      <div class="past-detail">応募 312名 → 当選 30名</div>
+    </div>
+    <div style="text-align:right">
+      <div class="past-ratio">10.4×</div>
+      <div class="past-ratio-label">COMPETITION</div>
+    </div>
+  </div>
+  <div class="past-item">
+    <div>
+      <div class="past-name">第2回 — ラリマー</div>
+      <div class="past-detail">応募 258名 → 当選 30名</div>
+    </div>
+    <div style="text-align:right">
+      <div class="past-ratio">8.6×</div>
+      <div class="past-ratio-label">COMPETITION</div>
+    </div>
+  </div>
+  <div class="past-item">
+    <div>
+      <div class="past-name">第1回 — ルチルクォーツ</div>
+      <div class="past-detail">応募 156名 → 当選 20名</div>
+    </div>
+    <div style="text-align:right">
+      <div class="past-ratio">7.8×</div>
+      <div class="past-ratio-label">COMPETITION</div>
+    </div>
+  </div>
+</div>
+
+<!-- Current Stone -->
+<div class="stone-section">
+  <div class="section-label">4th Exclusive Lottery</div>
+  <div class="stone-name">ルチルクォーツ</div>
+  <div class="stone-en">Rutilated Quartz</div>
+  <div class="stone-price">¥198,000</div>
+  <div class="stone-price-tax">tax included / free shipping</div>
+  <div class="stone-tags">
+    <span class="stone-tag">鑑別書付</span>
+    <span class="stone-tag">天然石</span>
+    <span class="stone-tag">一点物</span>
+    <span class="stone-tag">14日間返品可</span>
+  </div>
+  <div class="stone-desc">
+    金色の針状結晶が織りなす、唯一無二の輝き。<br><br>
+    鑑定士が産地にて一石ずつ選定した、<br>
+    最高品質のルチルクォーツのみをお届けいたします。<br><br>
+    ひとつとして同じものはない、あなただけの石です。
+  </div>
+  <div class="stone-limit">Limited to 30 pieces — 当選者のみご購入可</div>
+</div>
+
+<!-- Form -->
+<div class="form-section" id="formSection">
+  <h2>抽選に応募する</h2>
+  <form id="lotteryForm">
+    <div class="form-group">
+      <label>NAME</label>
+      <input type="text" id="name" placeholder="お名前" required>
+    </div>
+    <div class="form-group">
+      <label>LINE NAME</label>
+      <input type="text" id="lineName" placeholder="LINEの表示名" required>
+    </div>
+    <div class="form-group">
+      <label>EMAIL</label>
+      <input type="email" id="email" placeholder="メールアドレス" required>
+    </div>
+    <div class="form-group">
+      <label>DATE OF BIRTH</label>
+      <input type="date" id="birthday" required>
+    </div>
+    <div class="form-group">
+      <label>REASON</label>
+      <select id="reason">
+        <option value="">この石に惹かれた理由</option>
+        <option value="金運">金運を高めたい</option>
+        <option value="仕事運">仕事で成果を出したい</option>
+        <option value="人間関係">人間関係を整えたい</option>
+        <option value="直感">直感的に惹かれた</option>
+        <option value="贈り物">大切な方への贈り物</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+    <button type="submit" class="submit-btn" id="submitBtn">応 募 す る</button>
+    <p class="note">応募は無料です。ご当選された方のみ購入のご案内をお届けいたします。<br>お一人様1回限り。結果は3日以内にLINEでお知らせいたします。</p>
+  </form>
+</div>
+
+<!-- Completion -->
+<div class="completion" id="completion">
+  <div class="check-circle">✓</div>
+  <h2>Thank you</h2>
+  <div class="entry-label">ENTRY NUMBER</div>
+  <div class="entry-num" id="entryNumber"></div>
+  <div class="message">
+    抽選結果は3日以内にLINEでお届けいたします。<br>
+    ご当選された方のみ、ご購入のご案内をお送りいたします。<br><br>
+    通知をONにしてお待ちください。
+  </div>
+  <div class="result-date" id="resultDate"></div>
+</div>
+
+<div class="footer">
+  &copy; ISHIYA<br>
+  <a href="#">特定商取引法に基づく表記</a>&emsp;|&emsp;<a href="#">プライバシーポリシー</a>
+</div>
+
+<script>
+const DEADLINE=new Date('2026-04-07T23:59:59+09:00'),BASE=12,RATE=3.5;
+function updateCount(){const n=new Date,s=new Date('2026-03-31T12:00:00+09:00'),h=Math.max(0,(n-s)/36e5),j=Math.sin(h*.7)*5+Math.sin(h*1.3)*3,c=Math.floor(BASE+h*RATE+j);document.getElementById('entryCount').textContent=c}
+updateCount();setInterval(updateCount,3e4);
+function updateCD(){const n=new Date,d=Math.max(0,DEADLINE-n),D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);document.getElementById('cd-days').textContent=String(D).padStart(2,'0');document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');document.getElementById('cd-secs').textContent=String(S).padStart(2,'0')}
+updateCD();setInterval(updateCD,1e3);
+document.getElementById('lotteryForm').addEventListener('submit',function(e){e.preventDefault();const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';const num=String(Math.floor(1e5+Math.random()*9e5));setTimeout(()=>{document.getElementById('formSection').style.display='none';document.getElementById('completion').style.display='block';document.getElementById('entryNumber').textContent=num;const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];document.getElementById('resultDate').textContent=(r.getMonth()+1)+'月'+r.getDate()+'日（'+wd[r.getDay()]+'）LINEにて結果をお届けいたします';window.scrollTo({top:0,behavior:'smooth'})},1200)});
+</script>
+</body>
+</html>
