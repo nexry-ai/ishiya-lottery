@@ -253,7 +253,13 @@ function updateCount(){const n=new Date,s=new Date('2026-03-31T12:00:00+09:00'),
 updateCount();setInterval(updateCount,3e4);
 function updateCD(){const n=new Date,d=Math.max(0,DEADLINE-n),D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);document.getElementById('cd-days').textContent=String(D).padStart(2,'0');document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');document.getElementById('cd-secs').textContent=String(S).padStart(2,'0')}
 updateCD();setInterval(updateCD,1e3);
-document.getElementById('lotteryForm').addEventListener('submit',function(e){e.preventDefault();const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';const num=String(Math.floor(1e5+Math.random()*9e5));setTimeout(()=>{document.getElementById('formSection').style.display='none';document.getElementById('completion').style.display='block';document.getElementById('entryNumber').textContent=num;const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];document.getElementById('resultDate').textContent=(r.getMonth()+1)+'月'+r.getDate()+'日（'+wd[r.getDay()]+'）LINEにて結果をお届けいたします';window.scrollTo({top:0,behavior:'smooth'})},1200)});
+const FORM_API='https://line-crm-worker.nexry-inc-ai.workers.dev/api/forms/2340dc62-e4bb-47f5-b951-34ce88d3ba6c/submit';
+document.getElementById('lotteryForm').addEventListener('submit',async function(e){e.preventDefault();const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';
+const data={name:document.getElementById('name').value,line_name:document.getElementById('lineName').value,email:document.getElementById('email').value,birthday:document.getElementById('birthday').value,reason:document.getElementById('reason').value};
+const num=String(Math.floor(1e5+Math.random()*9e5));
+try{await fetch(FORM_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data,meta:{entry_number:num,stone:'rutile_4th',applied_at:new Date().toISOString()}})})}catch(err){console.warn('API submit failed, continuing:',err)}
+document.getElementById('formSection').style.display='none';document.getElementById('completion').style.display='block';document.getElementById('entryNumber').textContent=num;
+const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];document.getElementById('resultDate').textContent=(r.getMonth()+1)+'月'+r.getDate()+'日（'+wd[r.getDay()]+'）LINEにて結果をお届けいたします';window.scrollTo({top:0,behavior:'smooth'})});
 </script>
 </body>
 </html>
