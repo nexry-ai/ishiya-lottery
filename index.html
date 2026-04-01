@@ -248,22 +248,111 @@ pointer-events:none}
 </div>
 
 <script>
-let DEADLINE=new Date('2026-04-07T23:59:59+09:00'),BASE=12,RATE=3.5;
-function updateCount(){const n=new Date,s=new Date('2026-03-31T12:00:00+09:00'),h=Math.max(0,(n-s)/36e5),j=Math.sin(h*.7)*5+Math.sin(h*1.3)*3,c=Math.floor(BASE+h*RATE+j);document.getElementById('entryCount').textContent=c}
-updateCount();setInterval(updateCount,3e4);
-function updateCD(){const n=new Date,d=Math.max(0,DEADLINE-n),D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);document.getElementById('cd-days').textContent=String(D).padStart(2,'0');document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');document.getElementById('cd-secs').textContent=String(S).padStart(2,'0')}
-updateCD();setInterval(updateCD,1e3);
+const API='https://line-crm-worker.nexry-inc-ai.workers.dev';
+const LINE_URL='https://line.me/R/ti/p/@304bbnks';
+const STONE_DATA={
+  rutile:{name:'ルチルクォーツ',en:'金運の最高峰',desc:'金色の針状結晶が織りなす、唯一無二の輝き。<br><br>鑑定士が産地にて一石ずつ選定した、<br>最高品質のルチルクォーツのみをお届けいたします。<br><br>ひとつとして同じものはない、あなただけの石です。',reasons:[{v:'金運',t:'金運を高めたい'},{v:'仕事運',t:'仕事で成果を出したい'},{v:'決断力',t:'決断力を高めたい'},{v:'直感',t:'直感的に惹かれた'},{v:'贈り物',t:'大切な方への贈り物'},{v:'その他',t:'その他'}]},
+  larimar:{name:'ラリマー',en:'世界三大ヒーリングストーン',desc:'カリブ海ドミニカ共和国でのみ採れる奇跡の石。<br><br>世界三大ヒーリングストーンの一つとして<br>深い癒しと魂の浄化をもたらします。<br><br>ひとつとして同じものはない、あなただけの石です。',reasons:[{v:'癒し',t:'心の癒しを求めている'},{v:'人間関係',t:'人間関係を整えたい'},{v:'恋愛運',t:'恋愛運を高めたい'},{v:'直感',t:'直感的に惹かれた'},{v:'贈り物',t:'大切な方への贈り物'},{v:'その他',t:'その他'}]},
+  superseven:{name:'スーパーセブン',en:'7つの奇跡が宿る万能石',desc:'7種の鉱物が1つの石に共存する、<br>地球が生んだ究極の奇跡。<br><br>すべてのチャクラに対応し、<br>持ち主のあらゆる運気を底上げします。<br><br>ひとつとして同じものはない、あなただけの石です。',reasons:[{v:'総合運',t:'運気を総合的に上げたい'},{v:'霊的覚醒',t:'直感力・スピリチュアルな力を高めたい'},{v:'守護',t:'守護の力が欲しい'},{v:'直感',t:'直感的に惹かれた'},{v:'贈り物',t:'大切な方への贈り物'},{v:'その他',t:'その他'}]}
+};
+
 const params=new URLSearchParams(location.search);
-const FORM_ID=params.get('form')||'2340dc62-e4bb-47f5-b951-34ce88d3ba6c';
-const FORM_API='https://line-crm-worker.nexry-inc-ai.workers.dev/api/forms/'+FORM_ID+'/submit';
-// Override deadline from URL param: ?deadline=2026-04-05T23:59:59
-if(params.get('deadline')){try{DEADLINE.setTime(new Date(params.get('deadline')).getTime())}catch(e){}}
-document.getElementById('lotteryForm').addEventListener('submit',async function(e){e.preventDefault();const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';
-const data={name:document.getElementById('name').value,line_name:document.getElementById('lineName').value,email:document.getElementById('email').value,birthday:document.getElementById('birthday').value,reason:document.getElementById('reason').value};
-const num=String(Math.floor(1e5+Math.random()*9e5));
-try{await fetch(FORM_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data,meta:{entry_number:num,stone:'rutile_4th',applied_at:new Date().toISOString()}})})}catch(err){console.warn('API submit failed, continuing:',err)}
-document.getElementById('formSection').style.display='none';document.getElementById('completion').style.display='block';document.getElementById('entryNumber').textContent=num;
-const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];document.getElementById('resultDate').textContent=(r.getMonth()+1)+'月'+r.getDate()+'日（'+wd[r.getDay()]+'）LINEにて結果をお届けいたします';window.scrollTo({top:0,behavior:'smooth'})});
+const TOKEN=params.get('token');
+let DEADLINE=null,INVITE_DATA=null;
+
+function renderStone(key,price){
+  const s=STONE_DATA[key];if(!s)return;
+  document.querySelector('.stone-name').textContent=s.name;
+  document.querySelector('.stone-en').textContent=s.en;
+  document.querySelector('.stone-price').textContent='¥'+price.toLocaleString();
+  document.querySelector('.stone-desc').innerHTML=s.desc;
+  const sel=document.getElementById('reason');
+  sel.innerHTML='<option value="">この石に惹かれた理由</option>';
+  s.reasons.forEach(r=>{sel.innerHTML+=`<option value="${r.v}">${r.t}</option>`});
+}
+
+function updateCount(n){document.getElementById('entryCount').textContent=n}
+
+function updateCD(){
+  if(!DEADLINE){document.querySelector('.countdown-wrap').style.display='none';return}
+  const n=new Date,d=Math.max(0,DEADLINE-n),D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);
+  document.getElementById('cd-days').textContent=String(D).padStart(2,'0');
+  document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');
+  document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');
+  document.getElementById('cd-secs').textContent=String(S).padStart(2,'0');
+  if(d<=0){document.querySelector('.countdown-wrap').querySelector('.section-label').textContent='受付終了';document.getElementById('formSection').style.display='none'}
+}
+
+function showExpired(){
+  document.getElementById('formSection').innerHTML='<div style="text-align:center;padding:60px 24px"><h2 style="font-family:Cormorant Garamond,serif;font-size:24px;font-weight:400;letter-spacing:2px;margin-bottom:24px">受付期間が終了しました</h2><p style="font-size:13px;color:#7a756f;line-height:2.2;margin-bottom:32px">次回の抽選をお待ちください。<br>LINE登録で優先的にご案内いたします。</p><a href="'+LINE_URL+'" style="display:inline-block;padding:16px 40px;background:#2C2C2C;color:#fff;text-decoration:none;font-size:14px;letter-spacing:2px">LINE登録する</a></div>';
+}
+
+function showAlreadyEntered(){
+  document.getElementById('formSection').innerHTML='<div style="text-align:center;padding:60px 24px"><h2 style="font-family:Cormorant Garamond,serif;font-size:24px;font-weight:400;letter-spacing:2px;margin-bottom:24px">すでに応募済みです</h2><p style="font-size:13px;color:#7a756f;line-height:2.2">抽選結果はLINEでお届けいたします。<br>通知をONにしてお待ちください。</p></div>';
+}
+
+function showNoToken(){
+  document.getElementById('formSection').innerHTML='<div style="text-align:center;padding:60px 24px"><h2 style="font-family:Cormorant Garamond,serif;font-size:24px;font-weight:400;letter-spacing:2px;margin-bottom:24px">抽選に参加するには</h2><p style="font-size:13px;color:#7a756f;line-height:2.2;margin-bottom:32px">LINE登録後、抽選のご案内をお届けいたします。</p><a href="'+LINE_URL+'" style="display:inline-block;padding:16px 40px;background:#2C2C2C;color:#fff;text-decoration:none;font-size:14px;letter-spacing:2px">LINE登録する</a></div>';
+}
+
+(async function init(){
+  try{
+    if(TOKEN){
+      const res=await fetch(API+'/api/lottery/invite/'+TOKEN);
+      const json=await res.json();
+      if(!json.success||!json.data.valid){
+        if(json.data&&json.data.reason==='expired')showExpired();
+        else showExpired();
+        // Still show stone info from current round
+        const cur=await fetch(API+'/api/lottery/current').then(r=>r.json()).catch(()=>null);
+        if(cur&&cur.success){renderStone(cur.data.stone_key,cur.data.stone_price);updateCount(cur.data.entry_count)}
+        return;
+      }
+      if(json.data.already_entered){showAlreadyEntered()}
+      INVITE_DATA=json.data;
+      DEADLINE=new Date(json.data.expires_at);
+      renderStone(json.data.stone_key,json.data.stone_price);
+      // Get entry count from current round
+      const cur=await fetch(API+'/api/lottery/current').then(r=>r.json()).catch(()=>null);
+      if(cur&&cur.success)updateCount(cur.data.entry_count);
+    }else{
+      // No token — show current round info, no form
+      const res=await fetch(API+'/api/lottery/current');
+      const json=await res.json();
+      if(json.success){renderStone(json.data.stone_key,json.data.stone_price);updateCount(json.data.entry_count)}
+      showNoToken();
+    }
+  }catch(err){console.warn('Init error:',err)}
+  updateCD();setInterval(updateCD,1e3);
+})();
+
+document.getElementById('lotteryForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(!TOKEN)return;
+  const b=document.getElementById('submitBtn');b.disabled=!0;b.textContent='...';
+  try{
+    const res=await fetch(API+'/api/lottery/enter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      token:TOKEN,
+      name:document.getElementById('name').value,
+      email:document.getElementById('email').value,
+      line_name:document.getElementById('lineName').value,
+      birthday:document.getElementById('birthday').value,
+      reason:document.getElementById('reason').value
+    })});
+    const json=await res.json();
+    if(json.success){
+      document.getElementById('formSection').style.display='none';
+      document.getElementById('completion').style.display='block';
+      document.getElementById('entryNumber').textContent=json.data.entry_number;
+      const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];
+      document.getElementById('resultDate').textContent=(r.getMonth()+1)+'月'+r.getDate()+'日（'+wd[r.getDay()]+'）LINEにて結果をお届けいたします';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }else{
+      if(json.error==='Already entered')showAlreadyEntered();
+      else{b.disabled=!1;b.textContent='応 募 す る';alert(json.error||'エラーが発生しました')}
+    }
+  }catch(err){console.warn('Submit error:',err);b.disabled=!1;b.textContent='応 募 す る'}
+});
 </script>
 </body>
 </html>
