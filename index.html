@@ -104,6 +104,16 @@ pointer-events:none}
 .footer{text-align:center;padding:40px 24px;border-top:1px solid var(--light-gray);font-size:10px;color:#7a756f;letter-spacing:1px;line-height:2}
 .footer a{color:#7a756f;text-decoration:none}
 </style>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,"script","https://connect.facebook.net/en_US/fbevents.js");
+fbq("init","3924821841156078");
+fbq("track","PageView");
+</script>
 </head>
 <body>
 
@@ -280,7 +290,7 @@ function updateCD(){
   document.getElementById('cd-hours').textContent=String(H).padStart(2,'0');
   document.getElementById('cd-mins').textContent=String(M).padStart(2,'0');
   document.getElementById('cd-secs').textContent=String(S).padStart(2,'0');
-  if(d<=0){document.querySelector('.countdown-wrap').querySelector('.section-label').textContent='受付終了';document.getElementById('formSection').style.display='none'}
+  if(d<=0){document.querySelector('.countdown-wrap').querySelector('.section-label').textContent='受付終了';if(typeof fbq!=="undefined")fbq("track","CompleteRegistration");document.getElementById("formSection").style.display="none"}
 }
 
 function showExpired(){
@@ -341,7 +351,7 @@ document.getElementById('lotteryForm').addEventListener('submit',async function(
     })});
     const json=await res.json();
     if(json.success){
-      document.getElementById('formSection').style.display='none';
+      if(typeof fbq!=="undefined")fbq("track","CompleteRegistration");document.getElementById("formSection").style.display="none";
       document.getElementById('completion').style.display='block';
       document.getElementById('entryNumber').textContent=json.data.entry_number;
       const r=new Date;r.setDate(r.getDate()+3);const wd=['日','月','火','水','木','金','土'];
